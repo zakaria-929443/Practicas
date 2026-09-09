@@ -1,0 +1,23 @@
+# Compilados
+*.class
+*.o
+*.out
+__pycache__/
+*.pyc
+*.exe
+
+# Entornos
+venv/
+env/
+.venv/
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Node (si aplica)
+node_modules/
