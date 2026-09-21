@@ -64,6 +64,8 @@ struct agenda{
           contacto datos[MAX];
      int total;
     //COMPLETAR CAMPOS ITERADOR
+
+    
     //...
 };
 
