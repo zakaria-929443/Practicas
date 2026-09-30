@@ -44,8 +44,18 @@ void borrarUltimo(agenda& a);
  */
 bool esta(const agenda& a, const contacto& c);
 
-//COMPLETAR CON OPERACIONES ITERADOR
-//....
+/* Situa el iterador al principio de la agenda.
+*/
+void iniciarIterador(agenda& a);
+
+/* Devuelve true si el iterador tiene algun contacto pendiente.
+*/
+bool existeSiguiente(const agenda& a);
+
+/* Devuelve en c el siguiente contacto y avanza el iterador.
+   Requiere que existeSiguiente(a) sea true.
+*/
+void siguiente(agenda& a, contacto& c);
 
 // FIN de la PREDECLARACION DEL TAD agenda (fin INTERFAZ)
 
@@ -57,13 +67,13 @@ struct agenda{
 	 friend bool vacia(const agenda& a);
     friend void borrarUltimo(agenda& a);
 	 friend bool esta(const agenda& a, const contacto& c);
-    //COMPLETAR CON OPERACIONES ITERADOR
-    //....
+      friend void iniciarIterador(agenda& a);
+      friend bool existeSiguiente(const agenda& a);
+      friend void siguiente(agenda& a, contacto& c);
   private: //declaracion de la representacion interna del tipo
-           //... a COMPLETAR CON documentacion sobre la representacion interna ...
-          contacto datos[MAX];
-     int total;
-    //COMPLETAR CAMPOS ITERADOR
+      contacto datos[MAX];
+      int total;
+      int posicionIterador;
 
     
     //...

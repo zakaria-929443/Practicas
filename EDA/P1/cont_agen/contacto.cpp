@@ -1,4 +1,4 @@
-#include "contacto.hpp"
+#include "agenda.hpp"
 
 /* Dada una cadena nombre, una cadena direccion y un entero telefono, 
 devuelve un contacto c con esos datos. 
@@ -33,19 +33,43 @@ bool operator==(const contacto& c1, const contacto& c2){
     return (c1.nombre == c2.nombre);
 }
 
+static void mostrarAgenda(agenda& a){
+    contacto c;
+    iniciarIterador(a);
+    while(existeSiguiente(a)){
+        siguiente(a, c);
+        cout << "Nombre: " << nombre(c) << endl;
+        cout << "Direccion: " << direccion(c) << endl;
+        cout << "Telefono: " << telefono(c) << endl;
+    }
+}
+
 int main(){
-    struct contacto c1, c2;
-    crear("Zakaria", "Calle Falsa 123", 123456789, c1);
-    crear("Maria", "Calle Verdadera 456", 987654321, c2);
-    cout << "Nombre de c1: " << nombre(c1) << endl;
-    cout << "Direccion de c1: " << direccion(c1) << endl;
-    cout << "Telefono de c1: " << telefono(c1) << endl;
-    cout << "Nombre de c2: " << nombre(c2) << endl;
-    cout << "Direccion de c2: " << direccion(c2) << endl;
-    cout << "Telefono de c2: " << telefono(c2) << endl;
-    if (c1 == c2) {
-        cout << "Los contactos c1 y c2 son iguales." << endl;
+    agenda a;
+    contacto c;
+    string nombreBuscado;
+
+    iniciar(a);
+    crear("Zakaria", "Calle Falsa 123", 123456789, c);
+    anyadir(a, c);
+    crear("Maria", "Calle Verdadera 456", 987654321, c);
+    anyadir(a, c);
+    crear("Lucia", "Gran Via 10", 612345678, c);
+    anyadir(a, c);
+
+    cout << "Contactos de la agenda:" << endl;
+    mostrarAgenda(a);
+
+    borrarUltimo(a);
+    cout << "\nAgenda tras borrar el ultimo contacto:" << endl;
+    mostrarAgenda(a);
+
+    cout << "\nNombre que desea buscar: ";
+    cin >> nombreBuscado;
+    crear(nombreBuscado, "", 0, c);
+    if(esta(a, c)){
+        cout << "El contacto esta en la agenda." << endl;
     } else {
-        cout << "Los contactos c1 y c2 son diferentes." << endl;
+        cout << "El contacto no esta en la agenda." << endl;
     }
 }
