@@ -1,0 +1,8 @@
+conexion desde 00:1A:2B:3C:4D:5E establecida
+peticion a 192.168.1.1 correcta
+acceso 10.0.0.5:8080 denegado
+correo admin@serv.com enviado
+soporte.red@lab.es notificado
+usuario sin datos relevantes
+mac invalida 00:1A:2B:3C:4D
+dominio otro@correo.net ignorado
