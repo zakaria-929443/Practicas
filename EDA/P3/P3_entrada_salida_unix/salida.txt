@@ -1,0 +1,60 @@
+-----LISTADO: 0
+-----
+NO CAMBIADO: ID40
+INTRODUCIDO: ID40:::Maleta pequeña:::En venta:::Maleta con ruedas, pequeña, buen estado.:::2026-09-20:::2026-09-01
+INTRODUCIDO: ID10:::Maleta cabina:::Compra:::Compraria maleta cabina tamaño Ryanair:::2026-09-10:::2026-11-20
+INTRODUCIDO: ID20:::Silla paseo bebe:::En venta:::Vendo silla paseo para bebe:::2026-10-10:::2026-10-10
+NO INTRODUCIDO: ID20:::Silla paseo plegable bebe:::En venta:::Vendo silla paseo plegable para bebe:::2026-10-11:::2026-10-11
+-----LISTADO: 3
+[ ID10 -de-> Compra ;;; Maleta cabina ] (2026-09-10) --- Compraria maleta cabina tamaño Ryanair --- (2026-11-20)
+[ ID20 -de-> En venta ;;; Silla paseo bebe ] (2026-10-10) --- Vendo silla paseo para bebe --- (2026-10-10)
+[ ID40 -de-> En venta ;;; Maleta pequeña ] (2026-09-20) --- Maleta con ruedas, pequeña, buen estado. --- (2026-09-01)
+-----
+CAMBIADO: ID20:::Silla paseo bebe:::En venta:::Vendo silla paseo plegable para bebe. Precio negociable:::2026-10-21:::2026-10-21
+DESCONOCIDO: ID25
+DESCONOCIDO: iD20
+EXISTENTE: ID20
+NO LOCALIZADO: ID30
+INTRODUCIDO: ID30:::Mecedora:::Disponible gratis:::Regalo mecedora en buen estado:::2026-10-01:::2026-06-11
+LOCALIZADO: ID20:::Silla paseo bebe:::En venta:::Vendo silla paseo plegable para bebe. Precio negociable:::2026-10-21:::2026-10-21
+-----LISTADO: 4
+[ ID10 -de-> Compra ;;; Maleta cabina ] (2026-09-10) --- Compraria maleta cabina tamaño Ryanair --- (2026-11-20)
+[ ID20 -de-> En venta ;;; Silla paseo bebe ] (2026-10-21) --- Vendo silla paseo plegable para bebe. Precio negociable --- (2026-10-21)
+[ ID30 -de-> Disponible gratis ;;; Mecedora ] (2026-10-01) --- Regalo mecedora en buen estado --- (2026-06-11)
+[ ID40 -de-> En venta ;;; Maleta pequeña ] (2026-09-20) --- Maleta con ruedas, pequeña, buen estado. --- (2026-09-01)
+-----
+ANTERIORES A: 2026-08-31 ---  --- 
+ANTERIORES A: 2026-10-01 --- ID10:::ID40 --- 
+NO BORRADO: ID25
+CATEGORIA DESCONOCIDA: Intercambio
+CATEGORIA CONOCIDA: En venta
+-----LISTADO: 4
+[ ID10 -de-> Compra ;;; Maleta cabina ] (2026-09-10) --- Compraria maleta cabina tamaño Ryanair --- (2026-11-20)
+[ ID20 -de-> En venta ;;; Silla paseo bebe ] (2026-10-21) --- Vendo silla paseo plegable para bebe. Precio negociable --- (2026-10-21)
+[ ID30 -de-> Disponible gratis ;;; Mecedora ] (2026-10-01) --- Regalo mecedora en buen estado --- (2026-06-11)
+[ ID40 -de-> En venta ;;; Maleta pequeña ] (2026-09-20) --- Maleta con ruedas, pequeña, buen estado. --- (2026-09-01)
+-----
+BORRADO: ID30
+DE CATEGORIA: Intercambio ---  --- 
+DE CATEGORIA: En venta --- ID20:::ID40 --- 
+DE CATEGORIA: en venta ---  --- 
+-----LISTADO: 3
+[ ID10 -de-> Compra ;;; Maleta cabina ] (2026-09-10) --- Compraria maleta cabina tamaño Ryanair --- (2026-11-20)
+[ ID20 -de-> En venta ;;; Silla paseo bebe ] (2026-10-21) --- Vendo silla paseo plegable para bebe. Precio negociable --- (2026-10-21)
+[ ID40 -de-> En venta ;;; Maleta pequeña ] (2026-09-20) --- Maleta con ruedas, pequeña, buen estado. --- (2026-09-01)
+-----
+NO PURGADOS: 2026-08-31
+NO ELIMINADOS: Disponible gratis
+ELIMINADOS: En venta
+-----LISTADO: 1
+[ ID10 -de-> Compra ;;; Maleta cabina ] (2026-09-10) --- Compraria maleta cabina tamaño Ryanair --- (2026-11-20)
+-----
+INTRODUCIDO: ID20:::Silla paseo bebe:::En venta:::Vendo silla paseo plegable para bebe:::2026-10-11:::2026-10-11
+-----LISTADO: 2
+[ ID10 -de-> Compra ;;; Maleta cabina ] (2026-09-10) --- Compraria maleta cabina tamaño Ryanair --- (2026-11-20)
+[ ID20 -de-> En venta ;;; Silla paseo bebe ] (2026-10-11) --- Vendo silla paseo plegable para bebe --- (2026-10-11)
+-----
+PURGADOS: 2026-10-01
+-----LISTADO: 1
+[ ID20 -de-> En venta ;;; Silla paseo bebe ] (2026-10-11) --- Vendo silla paseo plegable para bebe --- (2026-10-11)
+-----
