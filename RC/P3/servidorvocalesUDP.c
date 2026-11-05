@@ -1,26 +1,26 @@
 /**
  * @file servidorvocalesUDP.c
  *
- * Programa *servidorvocalesUDP* que cuenta vocales usando UDP.
+ * Programa *servidorvocalesUDP* que cuenta vocales.
  *
  * Uso: servidorvocalesUDP puerto
  *
- * Crea un socket UDP asociado al puerto indicado y atiende a los clientes uno
- * tras otro. Para cada cliente va recibiendo datagramas con cadenas de texto y
- * contando sus vocales, hasta recibir un datagrama con el byte de fin de
- * transmisión (EOT = 4); en ese momento envía al cliente el número total de
- * vocales contadas.
+ * El programa crea un socket UDP asociado al puerto especificado y atiende
+ * consecutivamente a los clientes que le van enviando datagramas.
+ * Para cada cliente, recibe cadenas de texto, cuenta las vocales contenidas
+ * y al recibir la marca de fin de transmisión envía al cliente el número
+ * total de vocales contadas.
  */
 
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <netinet/in.h>
 #include <netdb.h>
+#include <netinet/in.h>
+
 #include "comun.h"
 
 // definición de constantes
@@ -37,20 +37,33 @@ const char fin = 4; // carácter ASCII end of transmission (EOT)
  */
 int establecer_servicio(struct addrinfo *servinfo, char f_verbose)
 {
-    int sock;
+    int sock = -1;
 
-    // crea un extremo de la comunicación (socket de datagramas)
-    if (f_verbose) { printf("Creando el socket (socket)... "); fflush(stdout); }
+    printf("\nSe usará ÚNICAMENTE la primera dirección de la estructura\n");
+
+    // crea un extremo de la comunicación y devuelve un descriptor
+    if (f_verbose)
+    {
+        printf("Creando el socket (socket)... ");
+        fflush(stdout);
+    }
     sock = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
     if (sock < 0)
     {
         perror("Error en la llamada socket: No se pudo crear el socket");
+        // muestra por pantalla el valor de la cadena suministrada por el
+        // programador, dos puntos y un mensaje de error que detalla la causa
+        // del error cometido
         exit(1);
     }
     if (f_verbose) printf("hecho\n");
 
-    // asocia el socket con el puerto local
-    if (f_verbose) { printf("Asociando socket a puerto (bind)... "); fflush(stdout); }
+    // asocia el socket con un puerto
+    if (f_verbose)
+    {
+        printf("Asociando socket a puerto (bind)... ");
+        fflush(stdout);
+    }
     if (bind(sock, servinfo->ai_addr, servinfo->ai_addrlen) < 0)
     {
         perror("Error asociando el socket");
@@ -58,12 +71,11 @@ int establecer_servicio(struct addrinfo *servinfo, char f_verbose)
     }
     if (f_verbose) printf("hecho\n");
 
-    // en UDP NO hay listen() ni accept(): no hay conexión
     return sock;
 }
 
 /**
- * Función que cuenta las vocales en una cadena de texto.
+ * Función que cuenta las vocales en una cadena de texto
  *
  * @param msg Cadena con el mensaje al que contar vocales.
  * @param s   Longitud del mensaje.
@@ -88,77 +100,77 @@ uint32_t countVowels(char msg[], size_t s)
  * Programa principal
  *
  * @param argc Número de argumentos usados en la línea de comandos.
- * @param argv Vector de punteros a cadenas de caracteres.
+ * @param argv Vector de punteros a cadenas de caracteres. argv[0]
+ *             apunta al nombre del programa, argv[1] al primer
+ *             argumento y así sucesivamente.
  * @return 0 si todo ha ido bien, distinto de 0 si hay error.
  */
 int main(int argc, char * argv[])
 {
-    char f_verbose = 1;          // flag, 1: imprimir información extra
-    struct addrinfo * servinfo;  // dirección propia (servidor)
-    int sock;                    // descriptor del socket
-    char msg[BUFF_SIZE];         // espacio para los datos recibidos
-    ssize_t readbytes;           // número de bytes recibidos
-    uint32_t num, netNum;        // vocales en formato local y de red
-    struct sockaddr_storage caddr; // dirección del cliente (remitente)
-    socklen_t clen;              // longitud de la dirección del cliente
+    // declaración de variables propias del programa principal (locales a main)
+    char f_verbose = 1;         // flag, 1: imprimir información extra
+    struct addrinfo * servinfo; // dirección propia (servidor)
+    int sock;                   // descriptor del socket
+    char msg[BUFF_SIZE];        // espacio para almacenar los datos recibidos
+    ssize_t readbytes;          // numero de bytes recibidos
+    uint32_t num, netNum;       // contador de vocales en formato local y de red
+    struct sockaddr_storage caddr; // dirección del cliente
+    socklen_t clen = sizeof caddr; // longitud de la dirección
 
     // verificación del número de parámetros:
     if (argc != 2)
     {
         printf("Número de parámetros incorrecto \n");
         printf("Uso: %s puerto\n", argv[0]);
-        exit(1);
+        exit(1); // finaliza el programa indicando salida incorrecta (1)
     }
 
-    // obtiene estructura de dirección y crea el socket
+    // obtiene estructura de direccion
     servinfo = obtener_struct_direccion(NULL, argv[1], f_verbose);
+
+    // crea un extremo de la comunicación. Devuelve el descriptor del socket
     sock = establecer_servicio(servinfo, f_verbose);
 
+    // hay que liberar la memoria dinámica usada para la dirección
+    // cuando ya no se necesite
     freeaddrinfo(servinfo);
     servinfo = NULL;
+    // como ya se ha liberado ese bloque de memoria,
+    // dejamos de apuntarlo para evitar acceder a ella por error.
+    // Si referenciamos esta variable el programa abortará con
+    // ERROR: SEGMENTATION FAULT
 
-    // bucle infinito para atender clientes uno tras otro
+    // bucle infinito para atender conexiones una tras otra
     while (1)
     {
         printf("\nEsperando datagramas (pulsa <Ctrl+c> para finalizar la ejecución)...\n");
 
-        // recibe datagramas de un cliente hasta la marca de fin de transmisión
+        // bucle de contar vocales
         num = 0;
-        int activa = 1;
-        while (activa)
-        {
+        do {
             clen = sizeof caddr;
-            readbytes = recvfrom(sock, msg, BUFF_SIZE, 0,
-                                 (struct sockaddr *)&caddr, &clen);
-            if (readbytes < 0)
+            if ((readbytes = recvfrom(sock, msg, BUFF_SIZE, 0, (struct sockaddr *)&caddr, &clen)) < 0)
             {
                 perror("Error de lectura en el socket (recvfrom)");
                 exit(1);
             }
+            if (readbytes == 1 && msg[0] == fin) break;
 
-            // ¿es la marca de fin (un único byte con valor 4)?
-            if (readbytes == 1 && msg[0] == fin)
-            {
-                activa = 0;
-            }
-            else
-            {
-                printf("Mensaje recibido del cliente: "); fflush(stdout);
-                write(1, msg, readbytes);
-                // evitamos printf por si lo recibido no es texto acabado en \0
-                num += countVowels(msg, readbytes);
-                printf("Vocales contadas hasta el momento: %u\n", num);
-            }
-        }
+            printf("Mensaje recibido del cliente: "); fflush(stdout);
+            write(1, msg, readbytes);
+            // muestra en pantalla (salida estándar 1) el mensaje recibido
+            // evitamos usar printf por si lo recibido no es texto acabado con \0
+            num += countVowels(msg, readbytes);
+            printf("Vocales contadas hasta el momento: %u\n",num);
 
-        // el remitente del datagrama de fin es el cliente: le respondemos
-        printf("\nFin de transmisión. Cliente:\n");
-        printsockaddr(&caddr);
-        printf("Contadas %u vocales\n", num);
+        } while (1);
 
-        netNum = htonl(num); // formato de red
-        if (sendto(sock, &netNum, sizeof netNum, 0,
-                   (struct sockaddr *)&caddr, clen) < 0)
+        printf("\nFin de transmisión\n");
+        printf("Contadas %u vocales\n", num);  // muestra las vocales recibidas
+        netNum = htonl(num);  // convierte el entero largo sin signo hostlong
+        // desde el orden de bytes del host al de la red
+        // envia al cliente el número de vocales recibidas:
+        if (sendto(sock, &netNum, sizeof netNum, 0, (struct sockaddr *)&caddr, clen) < 0)
         {
             perror("Error de escritura en el socket (sendto)");
             exit(1);
@@ -166,7 +178,7 @@ int main(int argc, char * argv[])
         if (f_verbose) printf("Enviado número de vocales contadas al cliente\n");
     }
 
-    // código inalcanzable
+    // código inalcanzable.
     close(sock);
     exit(0);
 }
